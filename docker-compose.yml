@@ -1,29 +1,29 @@
-# Définition des services qui seront déployés avec Docker Compose
+version: '3.8'
+
 services:
-  # Définition du premier microservice : Users (service-a)
   service-a:
-    build: ./service-a  # Spécifie que Docker doit construire l'image à partir du dossier ./service-a
+    build: ./service-a
     networks:
-      - kong-net  # Associe ce service au réseau Docker nommé "kong-net"
-  # Définition du deuxième microservice : Products (service-b)
+      - kong-net
+
   service-b:
-    build: ./service-b  # Spécifie que Docker doit construire l'image à partir du dossier ./service-b
+    build: ./service-b
     networks:
-      - kong-net  # Associe ce service au réseau Docker nommé "kong-net"
-  # Définition du service Kong API Gateway
+      - kong-net
+
   kong:
-    image: kong:latest  # Utilise l’image officielle de Kong
+    image: kong:latest
     environment:
-      KONG_DATABASE: "off"  # Active le mode DB-less (configuration déclarative)
-      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml  # Spécifie le fichier de configuration utilisé par Kong
+      KONG_DATABASE: "off"                         # DB-less mode
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
     volumes:
-      - ./kong.yml:/etc/kong/kong.yml:ro  # Monte le fichier de configuration de Kong en mode lecture seule
+      - ./kong.yml:/etc/kong/kong.yml:ro
     ports:
-      - "8000:8000"  # Port public pour la passerelle API
-      - "8001:8001"  # Port pour l'API d’administration de Kong
+      - "8000:8000"     # Port proxy
+      - "8001:8001"     # Port admin API
     networks:
-      - kong-net  # Associe Kong au même réseau que les microservices
-# Définition du réseau utilisé par tous les services
+      - kong-net
+
 networks:
   kong-net:
-    driver: bridge  # Utilisation du mode "bridge" pour permettre la communication entre les services
+    driver: bridge
