@@ -1,0 +1,16 @@
+# Définition du format de version utilisé par Kong
+_format_version: "1.1"
+# Définition des services que Kong va gérer
+services:
+  # Configuration du premier service : Users (service-a)
+  - name: service-a  # Nom du service
+    url: http://service-a:3001  # URL interne du microservice Users
+    routes:
+      - name: users-route  # Nom de la route permettant d’accéder au service
+        paths: ["/users"]  # URL publique pour accéder au service (via Kong)
+  # Configuration du second service : Products (service-b)
+  - name: service-b  # Nom du service
+    url: http://service-b:3002  # URL interne du microservice Products
+    routes:
+      - name: products-route  # Nom de la route permettant d’accéder au service
+        paths: ["/products"]  # URL publique pour accéder au service (via Kong)
